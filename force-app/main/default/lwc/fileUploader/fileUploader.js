@@ -1,8 +1,14 @@
-import { LightningElement, api, track } from 'lwc';
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 05-22-2023
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+**/
+import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import saveRecords from '@salesforce/apex/FileUploaderController.saveRecords';
-
 import LightningAlert from "lightning/alert";
+import saveRecords from '@salesforce/apex/FileUploaderController.saveRecords';
 
 const columns = [
     {label : 'Sequence Number', fieldName : 'rowNumber', type : 'number'},
@@ -19,22 +25,22 @@ const columns = [
 ];
 
 export default class FileUploader extends LightningElement {
-    fileData = {};
+    
     @track records = [];//all created records
     columns = columns;
-
+    fileData = {};
     pageSizeOptions = [5, 10, 25, 50, 75, 100]; //Page size options
-    totalRecords = 0; //Total no.of records
+    totalRecordsNumber = 0; //Total no.of records
     pageSize; //No.of records to be displayed per page
-    totalPages = 0; //Total no.of pages
+    totalPagesNumber = 0; //Total no.of pages
     pageNumber = 0; //Page number    
     recordsToDisplay = []; //Records to be displayed on the page
     
-    get bDisableFirst() {
+    get isDisableFirst() {
         return (this.pageNumber <= 1);
     }
-    get bDisableLast() {
-        return this.pageNumber == this.totalPages;
+    get isDisableLast() {
+        return this.pageNumber == this.totalPagesNumber;
     }
 
     get isDisabledSaveRecords(){
@@ -42,7 +48,7 @@ export default class FileUploader extends LightningElement {
     }
 
     /**File uploader code block start*/
-    openfileUpload(event) {
+    handleFileUpload(event) {
         const file = event.target.files[0];
         var fileSize = Math.round((file.size / 1048576));
         if(fileSize > 3.5){
@@ -50,7 +56,8 @@ export default class FileUploader extends LightningElement {
                 message: "Selected file exceeds the limit of 3.5 MB. Please choose another file or reduce the selected one.",
                 theme: "error",
                 label: "File " +  file.name + " is too large"
-            }).then(() => {
+            })
+            .then(() => {
                 console.log("###Alert Closed");
             });
         }else{
@@ -66,90 +73,86 @@ export default class FileUploader extends LightningElement {
         }
     }
     
-    handleClick(){
+    handleSaveRecords(){
         const {base64, filename} = this.fileData;
-        let titleStart = 'The file is uploaded';
-        let variantStart = 'warning';
-        let messageStart = 'The process is running';
-        this.showToast(titleStart, messageStart, variantStart);
-        saveRecords({ base64 }).then(result=>{
+        this.showToast('The file is uploaded', 'warning', 'The process is running');
+        saveRecords({ base64 })
+        .then(result=>{
             for (let i = 0; i < result.length; i++) {
                 result[i].rowNumber = i+1;
             }
             this.records = result;
-            this.totalRecords = result.length; // update total records count                 
+            this.totalRecordsNumber = result.length; // update total records count                 
             this.pageSize = this.pageSizeOptions[0]; //set pageSize with default value as first option
             this.paginationHelper(); // call helper menthod to update pagination logic 
             this.fileData = {};
-            let title = 'Records are created successfully!';
-            let variant = 'success';
-            let message = '';
-            this.showToast(title, message, variant);
+            this.showToast('Records are created successfully!', 'success', '');
         })
         .catch(error => {
             LightningAlert.open({
                 message: 'Something went wrong: ' + error.body.message,
                 theme: "error",
                 label: "Error with saving the records"
-            }).then(() => {
+            })
+            .then(() => {
                 console.log("###Alert Closed");
             });
             return;
         });
     }
 
-    showToast(title, message, variant) {
-        const event = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant
-        });
-        this.dispatchEvent(event);
-    }
-
 /**File uploader code block finish*/
 
 /**Pagination code block start*/
 
-    handleRecordsPerPage(event) {
+   handleRecordsPerPageChange(event) {
         this.pageSize = event.target.value;
         this.paginationHelper();
     }
-    previousPage() {
+   handlePreviousPageClick() {
         this.pageNumber = this.pageNumber - 1;
         this.paginationHelper();
     }
-    nextPage() {
+   handleNextPageClick() {
         this.pageNumber = this.pageNumber + 1;
         this.paginationHelper();
     }
-    firstPage() {
+   handleFirstPageClick() {
         this.pageNumber = 1;
         this.paginationHelper();
     }
-    lastPage() {
-        this.pageNumber = this.totalPages;
+   handleLastPageClick() {
+        this.pageNumber = this.totalPagesNumber;
         this.paginationHelper();
     }
-    // JS function to handel pagination logic 
+    // JS function to handle pagination logic 
     paginationHelper() {
         this.recordsToDisplay = [];
         // calculate total pages
-        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        this.totalPagesNumber = Math.ceil(this.totalRecordsNumberNumber / this.pageSize);
         // set page number 
         if (this.pageNumber <= 1) {
             this.pageNumber = 1;
-        } else if (this.pageNumber >= this.totalPages) {
-            this.pageNumber = this.totalPages;
+        } else if (this.pageNumber >= this.totalPagesNumber) {
+            this.pageNumber = this.totalPagesNumber;
         }
         // set records to display on current page 
         for (let i = (this.pageNumber - 1) * this.pageSize; i < this.pageNumber * this.pageSize; i++) {
-            if (i === this.totalRecords) {
+            if (i === this.totalRecordsNumber) {
                 break;
             }
             this.recordsToDisplay.push(this.records[i]);
         }
     }
 /**Pagination code block finish*/
+
+showToast(title, message, variant) {
+    const event = new ShowToastEvent({
+        title: title,
+        message: message,
+        variant: variant
+    });
+    this.dispatchEvent(event);
+}
 
 }

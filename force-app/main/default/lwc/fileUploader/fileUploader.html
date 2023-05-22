@@ -1,9 +1,10 @@
 <template>
+    <!--File Upload section-->
     <lightning-card title="Upload JSON File" icon-name="custom:custom14">
         <div class="slds-m-around_medium">
             <lightning-input type="file" 
             accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf"
-             onchange={openfileUpload}></lightning-input>
+             onchange={handleFileUpload}></lightning-input>
         </div>
         <template if:true={fileData}>
             <div class="slds-m-around_medium" style="color: red;font-family: Helvetica, Arial, sans-serif;">
@@ -11,10 +12,11 @@
             </div>
         </template>
         <div class="slds-m-around_medium">
-            <lightning-button disabled={isDisabledSaveRecords} variant="brand" label="Save Records" title="Submit" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button disabled={isDisabledSaveRecords} variant="brand" label="Save Records" title="Submit" onclick={handleSaveRecords} class="slds-m-left_x-small"></lightning-button>
         </div>
     </lightning-card>
 
+    <!--Datatable with inserted records section-->
     <lightning-card>
         <div>
             <lightning-datatable
@@ -24,7 +26,7 @@
             </lightning-datatable>
         </div>
 
-
+    <!--Pagination section-->
         <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread" style="padding-top: 0.5em;">
             <!--RECORDS PER PAGE-->
             <div class="slds-col">
@@ -41,18 +43,18 @@
             </div>
             <!--PAGE NAVIGATION-->
             <div class="slds-align_absolute-center" style="height:5rem">
-                <lightning-button disabled={bDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button>
-                <lightning-button disabled={bDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={previousPage}></lightning-button>
+                <lightning-button disabled={isDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button>
+                <lightning-button disabled={isDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={previousPage}></lightning-button>
                 &nbsp;
-                <span class="slds-badge">Showing {pageNumber} &nbsp;of&nbsp; {totalPages} &nbsp;&nbsp;Page(s)</span>
+                <span class="slds-badge">Showing {pageNumber} &nbsp;of&nbsp; {totalPagesNumber} &nbsp;&nbsp;Page(s)</span>
                 &nbsp;
-                <lightning-button disabled={bDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
-                <lightning-button disabled={bDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button>
+                <lightning-button disabled={isDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
+                <lightning-button disabled={isDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button>
             </div>
             <!--TOTAL RECORDS-->
             <div class="slds-clearfix">
                 <div class="slds-float_right">
-                    <span class="slds-badge"> Total Records: {totalRecords}</span>
+                    <span class="slds-badge"> Total Records: {totalRecordsNumber}</span>
                 </div>
             </div>
         </div>

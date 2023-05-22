@@ -1,9 +1,9 @@
 @isTest
 public with sharing class FileUploaderControllerTest {
     @isTest
-    public static void saveRecordsTest() {
-
-        String testData = '['+
+    public static void saveRecordsPositiveTest() {
+        //Given
+        String fileDataMock = '['+
             '{'+
             '"Carrier_File_Code__c" : 10001,'+
             '"Insured_Name__c" : "Michael Gauss",'+
@@ -23,16 +23,18 @@ public with sharing class FileUploaderControllerTest {
             '"Transaction_Code__c" : "BRF"'+
             '}'+
         ']';
-        Blob testDataBlob = Blob.valueof(testData);
-        String fileBodyEncoded = EncodingUtil.base64Encode(testDataBlob);
-        List<Policy_Transaction_Exception_Management__c> objects = FileUploaderController.saveRecords(fileBodyEncoded);
-        System.assertEquals(2, objects.size());
+        Blob fileDataBlob = Blob.valueof(fileDataMock);
+        String fileBodyEncoded = EncodingUtil.base64Encode(fileDataBlob);
+        //When
+        List<Policy_Transaction_Exception_Management__c> policyTransactionExceptionManagements = FileUploaderController.saveRecords(fileBodyEncoded);
+        //Then
+        System.assertEquals(2, policyTransactionExceptionManagements.size());
     }
 
     @isTest
-    public static void saveRecordsErrorTest() {
-
-        String testData = '['+
+    public static void saveRecordsNegativeTest() {
+        //Given
+        String fileDataMock = '['+
             '{'+
             '"Carrier_File_Code" : 10001,'+
             '"Insured_Name__c" : "Michael Gauss",'+
@@ -52,11 +54,13 @@ public with sharing class FileUploaderControllerTest {
             '"Transaction_Code__c" : "BRF"'+
             '}'+
         ']';
-        Blob testDataBlob = Blob.valueof(testData);
-        String fileBodyEncoded = EncodingUtil.base64Encode(testDataBlob);
+        Blob fileDataBlob = Blob.valueof(fileDataMock);
+        String fileBodyEncoded = EncodingUtil.base64Encode(fileDataBlob);
         try{
-            List<Policy_Transaction_Exception_Management__c> objects = FileUploaderController.saveRecords(fileBodyEncoded);
+            //When
+            List<Policy_Transaction_Exception_Management__c> policyTransactionExceptionManagements = FileUploaderController.saveRecords(fileBodyEncoded);
         } catch (Exception ex) {
+            //Then
             System.assertEquals('Script-thrown exception', ex.getMessage());
         }  
     }
