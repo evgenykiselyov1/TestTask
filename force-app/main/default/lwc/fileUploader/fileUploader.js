@@ -1,10 +1,11 @@
 /**
- * @description       : 
- * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @description       : This is a JS controller for UI of fileuploader
+ * @author            : Ievgen Kyselov
  * @group             : 
  * @last modified on  : 05-22-2023
- * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @last modified by  : Ievgen Kyselov
 **/
+
 import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningAlert from "lightning/alert";
@@ -51,6 +52,7 @@ export default class FileUploader extends LightningElement {
     handleFileUpload(event) {
         const file = event.target.files[0];
         var fileSize = Math.round((file.size / 1048576));
+        /*Validation of file size. Couldn't be more than 3.5 mb because of lightning-input component SF limitation*/
         if(fileSize > 3.5){
             LightningAlert.open({
                 message: "Selected file exceeds the limit of 3.5 MB. Please choose another file or reduce the selected one.",
@@ -58,7 +60,6 @@ export default class FileUploader extends LightningElement {
                 label: "File " +  file.name + " is too large"
             })
             .then(() => {
-                console.log("###Alert Closed");
             });
         }else{
             var reader = new FileReader();
@@ -75,7 +76,7 @@ export default class FileUploader extends LightningElement {
     
     handleSaveRecords(){
         const {base64, filename} = this.fileData;
-        this.showToast('The file is uploaded', 'warning', 'The process is running');
+        this.showToast('The file is uploaded', 'The process is running', 'warning' );
         saveRecords({ base64 })
         .then(result=>{
             for (let i = 0; i < result.length; i++) {
@@ -86,7 +87,7 @@ export default class FileUploader extends LightningElement {
             this.pageSize = this.pageSizeOptions[0]; //set pageSize with default value as first option
             this.paginationHelper(); // call helper menthod to update pagination logic 
             this.fileData = {};
-            this.showToast('Records are created successfully!', 'success', '');
+            this.showToast('Records are created successfully!', '', 'success');
         })
         .catch(error => {
             LightningAlert.open({
@@ -95,7 +96,6 @@ export default class FileUploader extends LightningElement {
                 label: "Error with saving the records"
             })
             .then(() => {
-                console.log("###Alert Closed");
             });
             return;
         });
@@ -129,7 +129,7 @@ export default class FileUploader extends LightningElement {
     paginationHelper() {
         this.recordsToDisplay = [];
         // calculate total pages
-        this.totalPagesNumber = Math.ceil(this.totalRecordsNumberNumber / this.pageSize);
+        this.totalPagesNumber = Math.ceil(this.totalRecordsNumber / this.pageSize);
         // set page number 
         if (this.pageNumber <= 1) {
             this.pageNumber = 1;

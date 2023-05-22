@@ -1,3 +1,11 @@
+<!--
+  @description       : This is a markup for fileuploader component
+  @author            : Ievgen Kyselov
+  @group             : 
+  @last modified on  : 05-22-2023
+  @last modified by  : Ievgen Kyselov
+-->
+
 <template>
     <!--File Upload section-->
     <lightning-card title="Upload JSON File" icon-name="custom:custom14">
@@ -33,7 +41,7 @@
                 <div class="slds-list_inline slds-p-bottom_xx-small">
                     <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage">Page Size:</label>
                     <div class="slds-select_container">
-                        <select class="slds-select" id="recordsPerPage" onchange={handleRecordsPerPage}>
+                        <select class="slds-select" id="recordsPerPage" onchange={handleRecordsPerPageChange}>
                             <template for:each={pageSizeOptions} for:item="option">
                                 <option key={option} value={option}>{option}</option>
                             </template>
@@ -43,13 +51,13 @@
             </div>
             <!--PAGE NAVIGATION-->
             <div class="slds-align_absolute-center" style="height:5rem">
-                <lightning-button disabled={isDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={firstPage}></lightning-button>
-                <lightning-button disabled={isDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={previousPage}></lightning-button>
+                <lightning-button disabled={isDisableFirst} icon-name="utility:jump_to_left" label="First" class="slds-p-horizontal_x-small" alternative-text="first page" onclick={handleFirstPageClick}></lightning-button>
+                <lightning-button disabled={isDisableFirst} icon-name="utility:chevronleft" label="Previous" alternative-text="Previous" onclick={handlePreviousPageClick}></lightning-button>
                 &nbsp;
                 <span class="slds-badge">Showing {pageNumber} &nbsp;of&nbsp; {totalPagesNumber} &nbsp;&nbsp;Page(s)</span>
                 &nbsp;
-                <lightning-button disabled={isDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
-                <lightning-button disabled={isDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={lastPage} icon-position="right"></lightning-button>
+                <lightning-button disabled={isDisableLast} icon-name="utility:chevronright" label="Next" alternative-text="Next" onclick={handleNextPageClick} class="slds-p-horizontal_x-small" icon-position="right"></lightning-button>
+                <lightning-button disabled={isDisableLast} icon-name="utility:jump_to_right" label="Last" alternative-text="last page" onclick={handleLastPageClick} icon-position="right"></lightning-button>
             </div>
             <!--TOTAL RECORDS-->
             <div class="slds-clearfix">

@@ -1,3 +1,12 @@
+/**
+ * @description       : This is an apex test Class for apex controller of the fileuploader component. 
+ *                      It provides tests for positive and negative scenarios
+ * @author            : Ievgen Kyselov
+ * @group             : 
+ * @last modified on  : 05-22-2023
+ * @last modified by  : Ievgen Kyselov
+**/
+
 @isTest
 public with sharing class FileUploaderControllerTest {
     @isTest

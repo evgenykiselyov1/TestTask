@@ -1,3 +1,12 @@
+/**
+ * @description       : This is an apex controller for fileuploader component. 
+ *                      Parses JSON file and inserts the records to the database
+ * @author            : Ievgen Kyselov
+ * @group             : 
+ * @last modified on  : 05-22-2023
+ * @last modified by  : Ievgen Kyselov
+**/
+
 public with sharing class FileUploaderController {
     @AuraEnabled
     public static List<Sobject> saveRecords(String base64) {
